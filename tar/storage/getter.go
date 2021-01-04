@@ -45,7 +45,8 @@ type pathFileGetter struct {
 
 func (pfg pathFileGetter) Get(filename string) (io.ReadCloser, error) {
 	path := filepath.Join(pfg.root, filename)
-	fmt.Printf("pathFileGetter: %s", path)
+	fmt.Fprintln(os.Stdout, "pathFileGetter: ", path)
+	fmt.Fprintln(os.Stderr, "pathFileGetter: ", path)
 	return os.Open(path)
 }
 
