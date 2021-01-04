@@ -51,6 +51,7 @@ func WriteOutputTarStream(fg storage.FileGetter, up storage.Unpacker, w io.Write
 			if err == io.EOF {
 				return nil
 			}
+			fmt.Println("Next Fail, ", err)
 			return err
 		}
 		switch entry.Type {
@@ -64,6 +65,7 @@ func WriteOutputTarStream(fg storage.FileGetter, up storage.Unpacker, w io.Write
 			}
 			fh, err := fg.Get(entry.GetName())
 			if err != nil {
+				fmt.Println("get failed, ", entry.GetName(), " - ", err)
 				return err
 			}
 			if crcHash == nil {
@@ -78,6 +80,7 @@ func WriteOutputTarStream(fg storage.FileGetter, up storage.Unpacker, w io.Write
 
 			if _, err := copyWithBuffer(multiWriter, fh, copyBuffer); err != nil {
 				fh.Close()
+				fmt.Println("copy failed, ", entry.GetName(), " - ", err)
 				return err
 			}
 
