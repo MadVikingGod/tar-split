@@ -51,12 +51,14 @@ func WriteOutputTarStream(fg storage.FileGetter, up storage.Unpacker, w io.Write
 			if err == io.EOF {
 				return nil
 			}
-			fmt.Println("Next Fail, ", err)
+			fmt.Println("next failed, ", err)
 			return err
 		}
 		switch entry.Type {
 		case storage.SegmentType:
 			if _, err := w.Write(entry.Payload); err != nil {
+				fmt.Println("write failed, ", err)
+
 				return err
 			}
 		case storage.FileType:

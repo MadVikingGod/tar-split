@@ -3,6 +3,7 @@ package storage
 import (
 	"bytes"
 	"errors"
+	"fmt"
 	"hash/crc64"
 	"io"
 	"os"
@@ -43,7 +44,9 @@ type pathFileGetter struct {
 }
 
 func (pfg pathFileGetter) Get(filename string) (io.ReadCloser, error) {
-	return os.Open(filepath.Join(pfg.root, filename))
+	path := filepath.Join(pfg.root, filename)
+	fmt.Printf("pathFileGetter: %s", path)
+	return os.Open(path)
 }
 
 type bufferFileGetPutter struct {
