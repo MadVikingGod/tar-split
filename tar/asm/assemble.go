@@ -6,6 +6,7 @@ import (
 	"hash"
 	"hash/crc64"
 	"io"
+	"os"
 	"sync"
 
 	"github.com/vbatts/tar-split/tar/storage"
@@ -52,12 +53,14 @@ func WriteOutputTarStream(fg storage.FileGetter, up storage.Unpacker, w io.Write
 				return nil
 			}
 			fmt.Println("next failed, ", err)
+			fmt.Fprintln(os.Stderr, "next failed, ", err)
 			return err
 		}
 		switch entry.Type {
 		case storage.SegmentType:
 			if _, err := w.Write(entry.Payload); err != nil {
 				fmt.Println("write failed, ", err)
+				fmt.Fprintln(os.Stderr, "write failed, ", err)
 
 				return err
 			}
@@ -68,6 +71,7 @@ func WriteOutputTarStream(fg storage.FileGetter, up storage.Unpacker, w io.Write
 			fh, err := fg.Get(entry.GetName())
 			if err != nil {
 				fmt.Println("get failed, ", entry.GetName(), " - ", err)
+				fmt.Fprintln(os.Stderr, "get failed, ", entry.GetName(), " - ", err)
 				return err
 			}
 			if crcHash == nil {
@@ -83,6 +87,7 @@ func WriteOutputTarStream(fg storage.FileGetter, up storage.Unpacker, w io.Write
 			if _, err := copyWithBuffer(multiWriter, fh, copyBuffer); err != nil {
 				fh.Close()
 				fmt.Println("copy failed, ", entry.GetName(), " - ", err)
+				fmt.Fprintln(os.Stderr, "copy failed, ", entry.GetName(), " - ", err)
 				return err
 			}
 

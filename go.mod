@@ -1,4 +1,4 @@
-module github.com/vbatts/tar-split
+module github.com/madvikinggod/tar-split
 
 go 1.15
 
